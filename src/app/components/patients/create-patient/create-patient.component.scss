@@ -1,0 +1,47 @@
+.create-patient-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+  
+  mat-card {
+    padding: 24px;
+    
+    mat-card-title {
+      margin-bottom: 24px;
+      color: #1976d2;
+    }
+    
+    .form-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      
+      mat-form-field {
+        flex: 1;
+      }
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      margin-top: 32px;
+    }
+  }
+}
+
+.patient-form {
+  padding: 20px;
+  
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 24px;
+  }
+} 

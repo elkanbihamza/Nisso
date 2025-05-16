@@ -1,0 +1,66 @@
+<div class="patients-container">
+  <div class="header-row">
+    <h2>Patients</h2>
+    <button mat-raised-button color="primary" (click)="createPatient()">
+      <mat-icon>add</mat-icon>
+      New Patient
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search patients</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Search by name, phone..." #input>
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.first_name}} {{element.last_name}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="birth_date">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Birth Date </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.birth_date | date}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="gender">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Gender </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.gender}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="address">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Address </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.address}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="phone_number">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Phone </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.phone_number}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <button mat-icon-button color="primary" (click)="editPatient(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deletePatient(element)">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" (click)="startConsultation(element)" matTooltip="Start Consultation">
+          <mat-icon svgIcon="stethoscope"></mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25]"
+                 [pageSize]="10"
+                 showFirstLastButtons
+                 aria-label="Select page of patients">
+  </mat-paginator>
+</div> 

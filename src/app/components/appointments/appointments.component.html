@@ -1,0 +1,87 @@
+<div class="appointments-container">
+  <div class="header-row">
+    <h2>Appointments</h2>
+    <button mat-raised-button color="primary" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon>
+      New Appointment
+    </button>
+  </div>
+
+  <div class="filters-row">
+    <div class="predefined-filters">
+      <button mat-stroked-button 
+              [class.active]="currentFilter === 'all'"
+              (click)="filterAppointments('all')">
+        All
+      </button>
+      <button mat-stroked-button 
+              [class.active]="currentFilter === 'today'"
+              (click)="filterAppointments('today')">
+        Today
+      </button>
+      <button mat-stroked-button 
+              [class.active]="currentFilter === 'tomorrow'"
+              (click)="filterAppointments('tomorrow')">
+        Tomorrow
+      </button>
+      <button mat-stroked-button 
+              [class.active]="currentFilter === 'upcoming'"
+              (click)="filterAppointments('upcoming')">
+        Next 7 Days
+      </button>
+    </div>
+
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search appointments</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Search by patient name, reason..." #input>
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div class="table-container">
+    <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
+      <ng-container matColumnDef="num_rdv">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Sequence No. </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.num_rdv}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="dateTime">
+        <mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date" [start]="'asc'">
+          Date & Time
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.dateTime | date:'dd/MM/yyyy HH:mm'}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="patientName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Patient </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.patientName}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="reason">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Reason </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.reason}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <button mat-icon-button color="primary" (click)="editAppointment(element)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteAppointment(element)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25]"
+                   [pageSize]="10"
+                   showFirstLastButtons
+                   aria-label="Select page of appointments">
+    </mat-paginator>
+  </div>
+</div> 
