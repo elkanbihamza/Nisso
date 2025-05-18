@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 
 export interface Patient {
   id: number;
-  first_name: string;
-  last_name: string;
+  prenom_patient: string;
+  nom_patient: string;
   birth_date: Date;
   gender: string;
   address: string;

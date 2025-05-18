@@ -6,14 +6,24 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { MatSort } from '@angular/material/sort';
 
+interface ApiResponse<T> {
+  status_code: number;
+  status_message: string;
+  data: T;
+}
+
 interface Patient {
-  id: number;
-  first_name: string;
-  last_name: string;
-  birth_date: Date;
-  gender: string;
-  address: string;
-  phone_number: string;
+  id_patient: number;
+  nom_patient: string;
+  prenom_patient: string;
+  CIN: string;
+  email: string;
+  date_naissance: string;
+  telephone: string;
+  assurance: string;
+  adresse: string;
+  created_at: string;
+  updated_at: string;
 }
 
 @Component({
@@ -22,7 +32,7 @@ interface Patient {
   styleUrls: ['./patients.component.scss']
 })
 export class PatientsComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'birth_date', 'gender', 'address', 'phone_number', 'actions'];
+  displayedColumns: string[] = ['name', 'CIN', 'date_naissance', 'telephone', 'assurance', 'actions'];
   dataSource: MatTableDataSource<Patient>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -37,7 +47,7 @@ export class PatientsComponent implements OnInit {
   ngOnInit(): void {
     this.dataSource.data = this.getMockPatients();
     this.dataSource.filterPredicate = (data: Patient, filter: string) => {
-      const searchStr = (data.first_name + ' ' + data.last_name + ' ' + data.phone_number).toLowerCase();
+      const searchStr = (data.nom_patient + ' ' + data.prenom_patient + ' ' + data.telephone + ' ').toLowerCase();
       return searchStr.indexOf(filter) !== -1;
     };
   }
@@ -62,15 +72,15 @@ export class PatientsComponent implements OnInit {
       width: '400px',
       data: {
         title: 'Delete Patient',
-        message: `Are you sure you want to delete patient ${patient.first_name} ${patient.last_name}?`
+        message: `Are you sure you want to delete patient ${patient.nom_patient} ${patient.prenom_patient}?`
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const index = this.dataSource.data.findIndex(p => p.id === patient.id);
+        const index = this.dataSource.data.findIndex(p => p.id_patient === patient.id_patient);
         if (index !== -1) {
-          const updatedData = this.dataSource.data.filter(p => p.id !== patient.id);
+          const updatedData = this.dataSource.data.filter(p => p.id_patient !== patient.id_patient);
           this.dataSource.data = updatedData;
         }
       }
@@ -95,139 +105,69 @@ export class PatientsComponent implements OnInit {
   private getMockPatients(): Patient[] {
     return [
       {
-        id: 1,
-        first_name: 'John',
-        last_name: 'Doe',
-        birth_date: new Date('1980-05-15'),
-        gender: 'Male',
-        address: '123 Main St, Cityville, ST 12345',
-        phone_number: '555-0123'
+        id_patient: 1,
+        nom_patient: 'Doe',
+        prenom_patient: 'John',
+        CIN: 'AB123456',
+        email: 'john.doe@example.com',
+        date_naissance: '1980-05-15',
+        telephone: '0612345678',
+        assurance: 'CNSS',
+        adresse: '123 Main St, Cityville',
+        created_at: '2025-05-17T16:09:32.000000Z',
+        updated_at: '2025-05-17T16:09:32.000000Z'
       },
       {
-        id: 2,
-        first_name: 'Jane',
-        last_name: 'Smith',
-        birth_date: new Date('1992-08-23'),
-        gender: 'Female',
-        address: '456 Oak Ave, Townsburg, ST 12346',
-        phone_number: '555-0124'
+        id_patient: 2,
+        nom_patient: 'Smith',
+        prenom_patient: 'Jane',
+        CIN: 'AB123457',
+        email: 'jane.smith@example.com',
+        date_naissance: '1992-08-23',
+        telephone: '0612345679',
+        assurance: 'CNSS',
+        adresse: '456 Oak Ave, Townsburg',
+        created_at: '2025-05-17T16:09:32.000000Z',
+        updated_at: '2025-05-17T16:09:32.000000Z'
       },
       {
-        id: 3,
-        first_name: 'Robert',
-        last_name: 'Johnson',
-        birth_date: new Date('1975-03-10'),
-        gender: 'Male',
-        address: '789 Pine Rd, Villageton, ST 12347',
-        phone_number: '555-0125'
+        id_patient: 3,
+        nom_patient: 'Johnson',
+        prenom_patient: 'Robert',
+        CIN: 'AB123458',
+        email: 'robert.johnson@example.com',
+        date_naissance: '1975-03-10',
+        telephone: '0612345680',
+        assurance: 'CNSS',
+        adresse: '789 Pine Rd, Villageton',
+        created_at: '2025-05-17T16:09:32.000000Z',
+        updated_at: '2025-05-17T16:09:32.000000Z'
       },
       {
-        id: 4,
-        first_name: 'Maria',
-        last_name: 'Garcia',
-        birth_date: new Date('1988-11-28'),
-        gender: 'Female',
-        address: '321 Elm St, Hamletville, ST 12348',
-        phone_number: '555-0126'
+        id_patient: 4,
+        nom_patient: 'Garcia',
+        prenom_patient: 'Maria',
+        CIN: 'AB123459',
+        email: 'maria.garcia@example.com',
+        date_naissance: '1988-11-28',
+        telephone: '0612345681',
+        assurance: 'RAMED',
+        adresse: '321 Elm St, Hamletville',
+        created_at: '2025-05-17T16:09:32.000000Z',
+        updated_at: '2025-05-17T16:09:32.000000Z'
       },
       {
-        id: 5,
-        first_name: 'David',
-        last_name: 'Wilson',
-        birth_date: new Date('1965-07-04'),
-        gender: 'Male',
-        address: '654 Maple Dr, Boroughton, ST 12349',
-        phone_number: '555-0127'
-      },
-      {
-        id: 6,
-        first_name: 'Sarah',
-        last_name: 'Brown',
-        birth_date: new Date('1995-01-17'),
-        gender: 'Female',
-        address: '987 Cedar Ln, Districtville, ST 12350',
-        phone_number: '555-0128'
-      },
-      {
-        id: 7,
-        first_name: 'Michael',
-        last_name: 'Taylor',
-        birth_date: new Date('1970-09-30'),
-        gender: 'Male',
-        address: '147 Birch Blvd, Metropolis, ST 12351',
-        phone_number: '555-0129'
-      },
-      {
-        id: 8,
-        first_name: 'Emma',
-        last_name: 'Martinez',
-        birth_date: new Date('1983-12-05'),
-        gender: 'Female',
-        address: '258 Willow Way, Suburbville, ST 12352',
-        phone_number: '555-0130'
-      },
-      {
-        id: 9,
-        first_name: 'William',
-        last_name: 'Anderson',
-        birth_date: new Date('1990-04-22'),
-        gender: 'Male',
-        address: '369 Spruce St, Ruraltown, ST 12353',
-        phone_number: '555-0131'
-      },
-      {
-        id: 10,
-        first_name: 'Sophie',
-        last_name: 'Thomas',
-        birth_date: new Date('1987-06-14'),
-        gender: 'Female',
-        address: '741 Ash Ave, Countryside, ST 12354',
-        phone_number: '555-0132'
-      },
-      {
-        id: 11,
-        first_name: 'James',
-        last_name: 'Moore',
-        birth_date: new Date('1978-02-28'),
-        gender: 'Male',
-        address: '852 Poplar Pl, Outskirts, ST 12355',
-        phone_number: '555-0133'
-      },
-      {
-        id: 12,
-        first_name: 'Isabella',
-        last_name: 'White',
-        birth_date: new Date('1993-10-09'),
-        gender: 'Female',
-        address: '963 Sycamore St, Downtown, ST 12356',
-        phone_number: '555-0134'
-      },
-      {
-        id: 13,
-        first_name: 'Lucas',
-        last_name: 'Clark',
-        birth_date: new Date('1982-08-11'),
-        gender: 'Male',
-        address: '159 Redwood Rd, Uptown, ST 12357',
-        phone_number: '555-0135'
-      },
-      {
-        id: 14,
-        first_name: 'Olivia',
-        last_name: 'Lee',
-        birth_date: new Date('1991-03-25'),
-        gender: 'Female',
-        address: '753 Magnolia Dr, Midtown, ST 12358',
-        phone_number: '555-0136'
-      },
-      {
-        id: 15,
-        first_name: 'Ethan',
-        last_name: 'Rodriguez',
-        birth_date: new Date('1985-12-19'),
-        gender: 'Male',
-        address: '951 Dogwood Dr, Eastside, ST 12359',
-        phone_number: '555-0137'
+        id_patient: 5,
+        nom_patient: 'Wilson',
+        prenom_patient: 'David',
+        CIN: 'AB123460',
+        email: 'david.wilson@example.com',
+        date_naissance: '1965-07-04',
+        telephone: '0612345682',
+        assurance: 'CNSS',
+        adresse: '654 Maple Dr, Boroughton',
+        created_at: '2025-05-17T16:09:32.000000Z',
+        updated_at: '2025-05-17T16:09:32.000000Z'
       }
     ];
   }

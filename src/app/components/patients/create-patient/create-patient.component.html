@@ -1,56 +1,61 @@
 <div class="create-patient-container">
-  <h2>Create New Patient</h2>
-  
+  <h2>{{ isEdit ? 'Mise à jour du patient' : 'Création d\'un nouveau patient' }}</h2>
+
   <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
     <mat-card>
       <mat-card-content>
         <div class="form-row">
           <mat-form-field appearance="fill">
-            <mat-label>First Name</mat-label>
-            <input matInput formControlName="first_name">
+            <mat-label>Nom</mat-label>
+            <input matInput formControlName="nom_patient">
           </mat-form-field>
 
           <mat-form-field appearance="fill">
-            <mat-label>Last Name</mat-label>
-            <input matInput formControlName="last_name">
+            <mat-label>Prénom</mat-label>
+            <input matInput formControlName="prenom_patient">
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Date de naissance</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date_naissance">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
         </div>
 
         <div class="form-row">
           <mat-form-field appearance="fill">
-            <mat-label>Birth Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="birth_date">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+            <mat-label>CIN</mat-label>
+            <input matInput formControlName="CIN">
           </mat-form-field>
 
           <mat-form-field appearance="fill">
-            <mat-label>Gender</mat-label>
-            <mat-select formControlName="gender">
-              <mat-option value="Male">Male</mat-option>
-              <mat-option value="Female">Female</mat-option>
-              <mat-option value="Other">Other</mat-option>
-            </mat-select>
+            <mat-label>Assurance</mat-label>
+            <input matInput formControlName="assurance">
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Numéro de téléphone</mat-label>
+            <input matInput formControlName="telephone">
           </mat-form-field>
         </div>
-
-        <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Address</mat-label>
-          <textarea matInput formControlName="address" rows="3"></textarea>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill">
-          <mat-label>Phone Number</mat-label>
-          <input matInput formControlName="phone_number">
-        </mat-form-field>
+        <div class="form-row">
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Adresse</mat-label>
+            <textarea matInput formControlName="adresse" rows="3"></textarea>
+          </mat-form-field>
+        </div>
+        
+        
       </mat-card-content>
 
       <mat-card-actions align="end">
         <button mat-button type="button" routerLink="/patients">Cancel</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!patientForm.valid">
-          Create Patient
+        <button mat-raised-button color="primary" type="submit" 
+                [disabled]="!patientForm.valid || isSubmitting">
+                {{ isEdit ? 'Update Patient' : 'Create Patient' }}
         </button>
       </mat-card-actions>
     </mat-card>
   </form>
-</div> 
+</div>
