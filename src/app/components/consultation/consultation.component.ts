@@ -55,26 +55,33 @@ export class ConsultationComponent implements OnInit {
   }
 
   onSubmit(): void {
-  if (this.consultationForm.valid) {
-    const consultationData = {
-      id_patient: this.patient.id_patient,  // use backend field name exactly
-      date: new Date(),
-      ...this.consultationForm.value
-    };
-    console.log('Consultation Data:', consultationData);
-
-    this.consultationService.createConsultation(consultationData).subscribe({
-      next: (createdConsultation) => {
-        console.log('Consultation created:', createdConsultation);
-        this.router.navigate(['/patients']);
-      },
-      error: (error) => {
-        console.error('Error creating consultation:', error);
-        // Optionally display error feedback to the user
-      }
-    });
+    if (this.consultationForm.valid) {
+      const formValue = this.consultationForm.value;
+      const consultationData = {
+        ...formValue,
+        temperature: parseFloat(formValue.temperature),
+        tension_arterielle_systolique: parseInt(formValue.tension_arterielle_systolique, 10),
+        tension_arterielle_diastolique: parseInt(formValue.tension_arterielle_diastolique, 10),
+        saturation_oxygene: parseInt(formValue.saturation_oxygene, 10),
+        frequence_cardiaque: parseInt(formValue.frequence_cardiaque, 10),
+        poids: parseFloat(formValue.poids),
+        taille: parseInt(formValue.taille, 10),
+        id_patient: this.patient.id_patient
+      };
+      this.consultationService.createConsultation(consultationData).subscribe({
+        next: (createdConsultation) => {
+          // Add the new consultation to the history list
+          this.consultationHistory = [createdConsultation, ...this.consultationHistory];
+          this.consultationForm.reset();
+          this.selectedHistory = null;
+        },
+        error: (error) => {
+          console.error('Error creating consultation:', error);
+          // Optionally display error feedback to the user
+        }
+      });
+    }
   }
-}
 
 
   viewHistoryDetails(history: Consultation): void {
@@ -97,5 +104,8 @@ export class ConsultationComponent implements OnInit {
     console.log('Viewing history:', history);
   }
 
-  
+  clearConsultationForm(): void {
+    this.selectedHistory = null;
+    this.consultationForm.reset();
+  }
 } 
