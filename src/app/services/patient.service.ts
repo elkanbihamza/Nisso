@@ -1,17 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Patient {
-  id: number;
-  prenom_patient: string;
-  nom_patient: string;
-  birth_date: Date;
-  gender: string;
-  address: string;
-  phone_number: string;
-}
-
+import { Patient } from '../interfaces/patient.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +11,7 @@ export class PatientService {
   constructor(private http: HttpClient) {}
 
   getPatients(): Observable<Patient[]> {
-    return this.http.get<Patient[]>(this.apiUrl);
+    return this.http.get<Patient[]>('http://localhost:8000/api/patient');
   }
 
   getPatient(id: number): Observable<Patient> {
@@ -29,14 +19,18 @@ export class PatientService {
   }
 
   createPatient(patient: Omit<Patient, 'id'>): Observable<Patient> {
-    return this.http.post<Patient>(this.apiUrl, patient);
+    console.log("create patient", patient)
+    return this.http.post<Patient>('http://localhost:8000/api/patient/create', patient);
   }
 
   updatePatient(id: number, patient: Patient): Observable<Patient> {
-    return this.http.put<Patient>(`${this.apiUrl}/${id}`, patient);
+    console.log("id", id)
+    console.log("patient update", patient)
+    return this.http.put<Patient>(`http://localhost:8000/api/patient/edit/${id}`, patient);
   }
 
   deletePatient(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    console.log("id", id)
+    return this.http.delete<void>(`http://localhost:8000/api/patient/${id}`);
   }
 } 

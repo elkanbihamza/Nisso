@@ -29,7 +29,7 @@ export class CreatePatientComponent implements OnInit {
     this.patientForm = this.fb.group({
       prenom_patient: ['', Validators.required],
       nom_patient: ['', Validators.required],
-      date_naissance: ['', Validators.required],
+      date_naissance: [''],
       adresse: [''],
       telephone: [''],
       assurance: [''],
@@ -38,7 +38,7 @@ export class CreatePatientComponent implements OnInit {
     });
 
     if (state?.patient) {
-      this.patientId = state.patient.id;
+      this.patientId = state.patient.id_patient;
       this.patientForm.patchValue(state.patient);
     }
   }

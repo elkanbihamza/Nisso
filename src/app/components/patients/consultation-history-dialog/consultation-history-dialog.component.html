@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Consultation History</h2>
+<mat-dialog-content>
+  <mat-list *ngIf="data.consultations && data.consultations.length; else noConsultations">
+    <mat-list-item *ngFor="let consultation of data.consultations">
+      <div>
+        <strong>Date:</strong> {{ consultation.created_at | date:'short' }}<br>
+        <strong>Motif:</strong> {{ consultation.motif }}
+      </div>
+    </mat-list-item>
+  </mat-list>
+  <ng-template #noConsultations>
+    <p>No consultations found for this patient.</p>
+  </ng-template>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

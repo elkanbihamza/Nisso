@@ -33,6 +33,7 @@ import { CreateAppointmentDialogComponent } from './components/appointments/crea
 import { PatientsComponent } from './components/patients/patients.component';
 import { CreatePatientComponent } from './components/patients/create-patient/create-patient.component';
 import { ConsultationComponent } from './components/consultation/consultation.component';
+import { ConsultationHistoryDialogComponent } from './components/patients/consultation-history-dialog/consultation-history-dialog.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ConsultationComponent } from './components/consultation/consultation.co
     CreateAppointmentDialogComponent,
     PatientsComponent,
     CreatePatientComponent,
-    ConsultationComponent
+    ConsultationComponent,
+    ConsultationHistoryDialogComponent
   ],
   imports: [
     BrowserModule,

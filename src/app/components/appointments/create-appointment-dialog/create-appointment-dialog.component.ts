@@ -1,7 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PatientService, Patient } from '../../../services/patient.service';
+import { PatientService } from '../../../services/patient.service';
+import { Patient } from '../../../interfaces/patient.interface';
 
 @Component({
   selector: 'app-create-appointment-dialog',
@@ -20,12 +21,14 @@ export class CreateAppointmentDialogComponent {
     private patientService: PatientService
   ) {
     this.isEdit = data?.isEdit || false;
+
+    console.log("this.data", this.data)
     
     this.appointmentForm = this.fb.group({
+      id_patient: [''],
       num_rdv: ['', Validators.required],
-      date: ['', Validators.required],
-      time: ['', Validators.required],
-      reason: ['', Validators.required]
+      date_rdv: ['', Validators.required],
+      motif: ['', Validators.required]
     });
 
     if (this.isEdit && data) {
@@ -34,9 +37,12 @@ export class CreateAppointmentDialogComponent {
   }
 
   ngOnInit(): void {
+    if(!this.isEdit){
     this.patientService.getPatients().subscribe(
       patients => this.patients = patients
     );
+    }
+    
   }
 
   onSubmit(): void {

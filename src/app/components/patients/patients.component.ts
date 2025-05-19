@@ -5,26 +5,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { MatSort } from '@angular/material/sort';
-
-interface ApiResponse<T> {
-  status_code: number;
-  status_message: string;
-  data: T;
-}
-
-interface Patient {
-  id_patient: number;
-  nom_patient: string;
-  prenom_patient: string;
-  CIN: string;
-  email: string;
-  date_naissance: string;
-  telephone: string;
-  assurance: string;
-  adresse: string;
-  created_at: string;
-  updated_at: string;
-}
+import { Patient } from '../../interfaces/patient.interface';
+import { PatientService } from '../../services/patient.service';
+import { ConsultationHistoryDialogComponent } from './consultation-history-dialog/consultation-history-dialog.component';
 
 @Component({
   selector: 'app-patients',
@@ -32,6 +15,7 @@ interface Patient {
   styleUrls: ['./patients.component.scss']
 })
 export class PatientsComponent implements OnInit {
+  originalData: Patient[] = [];
   displayedColumns: string[] = ['name', 'CIN', 'date_naissance', 'telephone', 'assurance', 'actions'];
   dataSource: MatTableDataSource<Patient>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -39,13 +23,17 @@ export class PatientsComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private patientService: PatientService
   ) {
     this.dataSource = new MatTableDataSource<Patient>([]);
   }
 
   ngOnInit(): void {
-    this.dataSource.data = this.getMockPatients();
+    this.patientService.getPatients().subscribe((patients: Patient[]) => {
+        console.log("patients", patients)
+        this.dataSource.data = patients;
+      });
     this.dataSource.filterPredicate = (data: Patient, filter: string) => {
       const searchStr = (data.nom_patient + ' ' + data.prenom_patient + ' ' + data.telephone + ' ').toLowerCase();
       return searchStr.indexOf(filter) !== -1;
@@ -61,31 +49,47 @@ export class PatientsComponent implements OnInit {
     this.router.navigate(['/patients/create']);
   }
 
+  getPatients(){
+
+  }
+
   editPatient(patient: Patient): void {
     this.router.navigate(['/patients/create'], { 
       state: { patient, isEdit: true }
     });
   }
 
-  deletePatient(patient: Patient): void {
+    deletePatient(patient: Patient): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
       data: {
-        title: 'Delete Patient',
-        message: `Are you sure you want to delete patient ${patient.nom_patient} ${patient.prenom_patient}?`
+        title: 'supprimer ce patient',
+        message: `Are you sure you want to delete the patient ${patient.prenom_patient} on ${patient.nom_patient}?`
       }
     });
-
+  
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const index = this.dataSource.data.findIndex(p => p.id_patient === patient.id_patient);
-        if (index !== -1) {
-          const updatedData = this.dataSource.data.filter(p => p.id_patient !== patient.id_patient);
-          this.dataSource.data = updatedData;
-        }
+        this.patientService.deletePatient(patient.id_patient).subscribe({
+          next: () => {
+            // Remove from dataSource after successful delete
+            const updatedData = this.dataSource.data.filter(a => a.id_patient !== patient.id_patient);
+            this.dataSource.data = updatedData;
+          },
+          error: err => {
+            console.error('Delete failed:', err);
+          }
+        });
       }
     });
   }
+
+  showHistory(element: any): void {
+  this.dialog.open(ConsultationHistoryDialogComponent, {
+    width: '500px',
+    data: { consultations: element.consultations || [] }
+  });
+}
 
   startConsultation(patient: Patient): void {
     this.router.navigate(['/consultation'], { 
@@ -102,73 +106,4 @@ export class PatientsComponent implements OnInit {
     }
   }
 
-  private getMockPatients(): Patient[] {
-    return [
-      {
-        id_patient: 1,
-        nom_patient: 'Doe',
-        prenom_patient: 'John',
-        CIN: 'AB123456',
-        email: 'john.doe@example.com',
-        date_naissance: '1980-05-15',
-        telephone: '0612345678',
-        assurance: 'CNSS',
-        adresse: '123 Main St, Cityville',
-        created_at: '2025-05-17T16:09:32.000000Z',
-        updated_at: '2025-05-17T16:09:32.000000Z'
-      },
-      {
-        id_patient: 2,
-        nom_patient: 'Smith',
-        prenom_patient: 'Jane',
-        CIN: 'AB123457',
-        email: 'jane.smith@example.com',
-        date_naissance: '1992-08-23',
-        telephone: '0612345679',
-        assurance: 'CNSS',
-        adresse: '456 Oak Ave, Townsburg',
-        created_at: '2025-05-17T16:09:32.000000Z',
-        updated_at: '2025-05-17T16:09:32.000000Z'
-      },
-      {
-        id_patient: 3,
-        nom_patient: 'Johnson',
-        prenom_patient: 'Robert',
-        CIN: 'AB123458',
-        email: 'robert.johnson@example.com',
-        date_naissance: '1975-03-10',
-        telephone: '0612345680',
-        assurance: 'CNSS',
-        adresse: '789 Pine Rd, Villageton',
-        created_at: '2025-05-17T16:09:32.000000Z',
-        updated_at: '2025-05-17T16:09:32.000000Z'
-      },
-      {
-        id_patient: 4,
-        nom_patient: 'Garcia',
-        prenom_patient: 'Maria',
-        CIN: 'AB123459',
-        email: 'maria.garcia@example.com',
-        date_naissance: '1988-11-28',
-        telephone: '0612345681',
-        assurance: 'RAMED',
-        adresse: '321 Elm St, Hamletville',
-        created_at: '2025-05-17T16:09:32.000000Z',
-        updated_at: '2025-05-17T16:09:32.000000Z'
-      },
-      {
-        id_patient: 5,
-        nom_patient: 'Wilson',
-        prenom_patient: 'David',
-        CIN: 'AB123460',
-        email: 'david.wilson@example.com',
-        date_naissance: '1965-07-04',
-        telephone: '0612345682',
-        assurance: 'CNSS',
-        adresse: '654 Maple Dr, Boroughton',
-        created_at: '2025-05-17T16:09:32.000000Z',
-        updated_at: '2025-05-17T16:09:32.000000Z'
-      }
-    ];
-  }
 } 

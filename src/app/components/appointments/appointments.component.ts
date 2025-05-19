@@ -5,14 +5,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { CreateAppointmentDialogComponent } from './create-appointment-dialog/create-appointment-dialog.component';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
-
-interface Appointment {
-  id: number;
-  num_rdv: number;
-  dateTime: Date;
-  reason: string;
-  patientName: string;
-}
+import { AppointmentService } from '../../services/appointment.service';
+import { Appointment } from '../../interfaces/appointment.interface';
 
 @Component({
   selector: 'app-appointments',
@@ -20,25 +14,28 @@ interface Appointment {
   styleUrls: ['./appointments.component.scss']
 })
 export class AppointmentsComponent implements OnInit {
-  displayedColumns: string[] = ['num_rdv', 'dateTime', 'patientName', 'reason', 'actions'];
+  displayedColumns: string[] = ['num_rdv', 'date_rdv', 'patientName', 'motif', 'actions'];
   dataSource: MatTableDataSource<Appointment>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   currentFilter: 'all' | 'today' | 'tomorrow' | 'upcoming' = 'all';
   private originalData: Appointment[] = [];
 
-  constructor(private dialog: MatDialog) {
+  constructor(private dialog: MatDialog, private appointmentService: AppointmentService) {
     this.dataSource = new MatTableDataSource<Appointment>([
       // Your existing appointments array here
     ]);
   }
 
   ngOnInit(): void {
-    this.originalData = this.getMockAppointments();
-    this.dataSource.data = this.originalData;
+    this.appointmentService.getAppointments().subscribe((appointments: Appointment[]) => {
+      console.log("appointments", appointments)
+    this.originalData = appointments;
+    this.dataSource.data = appointments;
+  });
     
     this.dataSource.filterPredicate = (data: Appointment, filter: string) => {
-      const searchStr = (data.patientName + data.reason).toLowerCase();
+      const searchStr = (data.patient.prenom_patient + data.motif).toLowerCase();
       return searchStr.indexOf(filter.toLowerCase()) !== -1;
     };
 
@@ -47,7 +44,7 @@ export class AppointmentsComponent implements OnInit {
       if (!sort.active || sort.direction === '') {
         // Default sort: closest dates first
         return data.sort((a, b) => 
-          new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
+          new Date(a.date_rdv).getTime() - new Date(b.date_rdv).getTime()
         );
       }
 
@@ -56,22 +53,22 @@ export class AppointmentsComponent implements OnInit {
         let propertyB: number | string = '';
 
         switch (sort.active) {
-          case 'dateTime':
+          case 'date_rdv':
             // Simple chronological sort
-            propertyA = new Date(a.dateTime).getTime();
-            propertyB = new Date(b.dateTime).getTime();
+            propertyA = new Date(a.date_rdv).getTime();
+            propertyB = new Date(b.date_rdv).getTime();
             break;
           case 'num_rdv':
             propertyA = a.num_rdv;
             propertyB = b.num_rdv;
             break;
           case 'patientName':
-            propertyA = a.patientName;
-            propertyB = b.patientName;
+            propertyA = a.patient.prenom_patient;
+            propertyB = b.patient.prenom_patient;
             break;
-          case 'reason':
-            propertyA = a.reason;
-            propertyB = b.reason;
+          case 'motif':
+            propertyA = a.motif;
+            propertyB = b.motif;
             break;
         }
 
@@ -90,7 +87,7 @@ export class AppointmentsComponent implements OnInit {
     // Set initial sort to show closest dates first
     if (this.sort) {
       this.sort.sort({
-        id: 'dateTime',
+        id: 'date_rdv',
         start: 'asc', // Changed to asc to show closest dates first
         disableClear: true
       });
@@ -110,43 +107,59 @@ export class AppointmentsComponent implements OnInit {
     });
   }
 
-  editAppointment(appointment: Appointment): void {
-    const dialogRef = this.dialog.open(CreateAppointmentDialogComponent, {
-      width: '500px',
-      data: { ...appointment, isEdit: true }
-    });
+editAppointment(appointment: Appointment): void {
+  const dialogRef = this.dialog.open(CreateAppointmentDialogComponent, {
+    width: '500px',
+    data: { ...appointment, isEdit: true }
+  });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const index = this.dataSource.data.findIndex(a => a.id === appointment.id);
-        if (index !== -1) {
-          const updatedData = [...this.dataSource.data];
-          updatedData[index] = { ...result, id: appointment.id };
-          this.dataSource.data = updatedData;
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      console.log("result", result)
+      this.appointmentService.updateAppointment(appointment.num_rdv, result).subscribe({
+        next: (updatedAppointment: Appointment) => {
+          const index = this.dataSource.data.findIndex(a => a.num_rdv === appointment.num_rdv);
+          if (index !== -1) {
+            const updatedData = [...this.dataSource.data];
+            updatedData[index] = updatedAppointment;
+            this.dataSource.data = updatedData;
+          }
+        },
+        error: err => {
+          console.error('Update failed:', err);
         }
-      }
-    });
-  }
+      });
+    }
+  });
+}
+
+
 
   deleteAppointment(appointment: Appointment): void {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400px',
-      data: {
-        title: 'Delete Appointment',
-        message: `Are you sure you want to delete the appointment for ${appointment.patientName} on ${appointment.dateTime}?`
-      }
-    });
+  const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+    width: '400px',
+    data: {
+      title: 'supprimer ce rendez-vous',
+      message: `Are you sure you want to delete the appointment for ${appointment.patient.prenom_patient} on ${appointment.date_rdv}?`
+    }
+  });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const index = this.dataSource.data.findIndex(a => a.id === appointment.id);
-        if (index !== -1) {
-          const updatedData = this.dataSource.data.filter(a => a.id !== appointment.id);
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.appointmentService.deleteAppointment(appointment.num_rdv).subscribe({
+        next: () => {
+          // Remove from dataSource after successful delete
+          const updatedData = this.dataSource.data.filter(a => a.num_rdv !== appointment.num_rdv);
           this.dataSource.data = updatedData;
+        },
+        error: err => {
+          console.error('Delete failed:', err);
         }
-      }
-    });
-  }
+      });
+    }
+  });
+}
+
 
   filterAppointments(filter: 'all' | 'today' | 'tomorrow' | 'upcoming'): void {
     this.currentFilter = filter;
@@ -162,7 +175,7 @@ export class AppointmentsComponent implements OnInit {
     switch (filter) {
       case 'today':
         this.dataSource.data = this.originalData.filter(appointment => {
-          const appointmentDate = new Date(appointment.dateTime);
+          const appointmentDate = new Date(appointment.date_rdv);
           appointmentDate.setHours(0, 0, 0, 0);
           return appointmentDate.getTime() === today.getTime();
         });
@@ -170,7 +183,7 @@ export class AppointmentsComponent implements OnInit {
 
       case 'tomorrow':
         this.dataSource.data = this.originalData.filter(appointment => {
-          const appointmentDate = new Date(appointment.dateTime);
+          const appointmentDate = new Date(appointment.date_rdv);
           appointmentDate.setHours(0, 0, 0, 0);
           return appointmentDate.getTime() === tomorrow.getTime();
         });
@@ -178,7 +191,7 @@ export class AppointmentsComponent implements OnInit {
 
       case 'upcoming':
         this.dataSource.data = this.originalData.filter(appointment => {
-          const appointmentDate = new Date(appointment.dateTime);
+          const appointmentDate = new Date(appointment.date_rdv);
           return appointmentDate >= today && appointmentDate <= nextWeek;
         });
         break;
@@ -203,78 +216,4 @@ export class AppointmentsComponent implements OnInit {
     }
   }
 
-  private getMockAppointments(): Appointment[] {
-    return [
-      {
-        id: 1,
-        num_rdv: 1009,
-        dateTime: new Date('2024-04-15T10:00:00'),  // April 15, 2024
-        reason: 'Surgery Follow-up',
-        patientName: 'William Anderson'
-      },
-      {
-        id: 2,
-        num_rdv: 1010,
-        dateTime: new Date('2024-04-20T14:30:00'),  // April 20, 2024
-        reason: 'Dermatology Consultation',
-        patientName: 'Sophie Thomas'
-      },
-      {
-        id: 3,
-        num_rdv: 1001,
-        dateTime: new Date('2025-05-15T09:00:00'),  // May 15, 2025
-        reason: 'Regular checkup',
-        patientName: 'John Doe'
-      },
-      {
-        id: 4,
-        num_rdv: 1002,
-        dateTime: new Date('2024-04-10T10:30:00'),
-        reason: 'Follow-up',
-        patientName: 'Jane Smith'
-      },
-      {
-        id: 5,
-        num_rdv: 1003,
-        dateTime: new Date('2024-04-14T14:00:00'),
-        reason: 'Consultation',
-        patientName: 'Robert Johnson'
-      },
-      {
-        id: 6,
-        num_rdv: 1004,
-        dateTime: new Date('2024-04-18T09:00:00'),
-        reason: 'Annual Physical',
-        patientName: 'Maria Garcia'
-      },
-      {
-        id: 7,
-        num_rdv: 1005,
-        dateTime: new Date('2024-04-22T11:30:00'),
-        reason: 'Blood Test',
-        patientName: 'David Wilson'
-      },
-      {
-        id: 8,
-        num_rdv: 1006,
-        dateTime: new Date('2024-04-25T10:00:00'),
-        reason: 'Vaccination',
-        patientName: 'Sarah Brown'
-      },
-      {
-        id: 9,
-        num_rdv: 1007,
-        dateTime: new Date('2024-04-28T15:30:00'),
-        reason: 'Dental Checkup',
-        patientName: 'Michael Taylor'
-      },
-      {
-        id: 10,
-        num_rdv: 1008,
-        dateTime: new Date('2024-05-18T09:30:00'),
-        reason: 'Eye Examination',
-        patientName: 'Emma Martinez'
-      }
-    ];
-  }
 } 

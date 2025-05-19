@@ -1,10 +1,10 @@
 <div class="appointments-container">
   <div class="header-row">
-    <h2>Appointments</h2>
-    <button mat-raised-button color="primary" (click)="openCreateDialog()">
-      <mat-icon>add</mat-icon>
-      New Appointment
-    </button>
+    <h2>rendez vous</h2>
+    <!-- <button mat-raised-button color="primary" (click)="openCreateDialog()">
+      <mat-icon>ajouter</mat-icon>
+      Nouveau rendez vous
+    </button> -->
   </div>
 
   <div class="filters-row">
@@ -12,27 +12,27 @@
       <button mat-stroked-button 
               [class.active]="currentFilter === 'all'"
               (click)="filterAppointments('all')">
-        All
+        tout
       </button>
       <button mat-stroked-button 
               [class.active]="currentFilter === 'today'"
               (click)="filterAppointments('today')">
-        Today
+        Aujourd'hui
       </button>
       <button mat-stroked-button 
               [class.active]="currentFilter === 'tomorrow'"
               (click)="filterAppointments('tomorrow')">
-        Tomorrow
+        demain
       </button>
       <button mat-stroked-button 
               [class.active]="currentFilter === 'upcoming'"
               (click)="filterAppointments('upcoming')">
-        Next 7 Days
+        prochains 7 jours
       </button>
     </div>
 
     <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Search appointments</mat-label>
+      <mat-label>chercher rendez vous</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Search by patient name, reason..." #input>
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
@@ -45,21 +45,21 @@
         <mat-cell *matCellDef="let element"> {{element.num_rdv}} </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="dateTime">
+      <ng-container matColumnDef="date_rdv">
         <mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date" [start]="'asc'">
-          Date & Time
+          Date et heure
         </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.dateTime | date:'dd/MM/yyyy HH:mm'}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.date_rdv | date:'dd/MM/yyyy HH:mm'}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="patientName">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Patient </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.patientName}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.patient.prenom_patient}} {{element.patient.nom_patient}}</mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="reason">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Reason </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.reason}} </mat-cell>
+      <ng-container matColumnDef="motif">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Motif </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.motif}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="actions">

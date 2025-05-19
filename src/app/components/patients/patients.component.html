@@ -2,15 +2,15 @@
   <div class="header-row">
     <h2>Patients</h2>
     <button mat-raised-button color="primary" (click)="createPatient()">
-      <mat-icon>add</mat-icon>
-      New Patient
+      <mat-icon>ajouter</mat-icon>
+      nouveau patient
     </button>
   </div>
 
   <mat-form-field appearance="outline" class="search-field">
-    <mat-label>Search patients</mat-label>
+    <mat-label>rechercher patients</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Search by name, phone..." #input>
-    <mat-icon matSuffix>search</mat-icon>
+    <mat-icon matSuffix>rechercher</mat-icon>
   </mat-form-field>
 
   <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
@@ -42,7 +42,7 @@
     </ng-container>
     
     <ng-container matColumnDef="address">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Address </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Addresse </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.address}} </mat-cell>
     </ng-container>
 
@@ -59,6 +59,9 @@
         </button>
         <button mat-icon-button color="warn" (click)="deletePatient(element)">
           <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" (click)="showHistory(element)" matTooltip="Start Consultation">
+          <mat-icon>history</mat-icon>
         </button>
         <button mat-icon-button color="accent" (click)="startConsultation(element)" matTooltip="Start Consultation">
           <mat-icon svgIcon="stethoscope"></mat-icon>
