@@ -1,0 +1,76 @@
+/* Container centré */
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f9fafb;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Formulaire */
+.login-form {
+  background: white;
+  padding: 2.5rem 3rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  width: 350px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* Titre */
+.login-form h2 {
+  margin-bottom: 1.5rem;
+  color: #1976d2;
+  font-weight: 600;
+}
+
+/* Inputs */
+.login-form input[type="email"],
+.login-form input[type="password"] {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.4rem;
+  border: 1.6px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.login-form input[type="email"]:focus,
+.login-form input[type="password"]:focus {
+  border-color: #1976d2;
+  outline: none;
+}
+
+/* Bouton */
+.login-form button {
+  width: 100%;
+  padding: 0.85rem 0;
+  background-color: #1976d2;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-form button:disabled {
+  background-color: #90caf9;
+  cursor: not-allowed;
+}
+
+.login-form button:hover:not(:disabled) {
+  background-color: #115293;
+}
+
+/* Message d’erreur */
+.error-message {
+  margin-top: 1rem;
+  color: #d32f2f;
+  font-weight: 600;
+  font-size: 0.9rem;
+}

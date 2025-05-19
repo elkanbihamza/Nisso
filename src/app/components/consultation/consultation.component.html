@@ -107,6 +107,16 @@
           <mat-label>Treatment</mat-label>
           <textarea matInput formControlName="traitement" rows="3"></textarea>
         </mat-form-field>
+        <div class="consultations">
+            <mat-label>Consultation</mat-label>
+           <div class="file-input-wrapper">
+      <label class="file-input-label" for="file-upload">Choose file</label>
+      <input class="file-input" type="file" id="file-upload" onchange="showFilename(event)">
+      <span class="file-input-filename" id="filename">No file chosen</span>
+    </div>
+        </div>
+        
+        
 
         <div class="form-actions">
           <button mat-button type="button" (click)="router.navigate(['/patients'])">Cancel</button>

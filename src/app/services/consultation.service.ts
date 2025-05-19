@@ -7,7 +7,7 @@ import { Consultation } from '../interfaces/consultation.interface';
   providedIn: 'root'
 })
 export class ConsultationService {
-  private apiUrl = 'api/rendezvous'; // Replace with your actual API URL
+  private apiUrl = 'api/consultation'; // Replace with your actual API URL
 
   constructor(private http: HttpClient) {}
 
@@ -22,7 +22,7 @@ export class ConsultationService {
   updateConsultation(id: number, Consultation: Consultation): Observable<Consultation> {
     console.log("id", id)
     console.log("Consultation", Consultation)
-    return this.http.put<Consultation>(`http://localhost:8000/api/consulat/edit/${id}`, Consultation);
+    return this.http.put<Consultation>(`http://localhost:8000/api/consulation/edit/${id}`, Consultation);
   }
 
   deleteConsultation(id: number): Observable<void> {

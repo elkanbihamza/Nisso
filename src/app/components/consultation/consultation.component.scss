@@ -42,6 +42,46 @@
 mat-form-field {
   width: 100%;
 }
+   .file-input-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5em;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .file-input-label {
+      background: #6c63ff;
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 0.93em;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(108, 99, 255, 0.12);
+      border: none;
+      outline: none;
+      margin-right: 4px;
+    }
+    .file-input-label:hover {
+      background: #5753c9;
+    }
+    .file-input {
+      display: none;
+    }
+    .file-input-filename {
+      font-size: 0.93em;
+      color: #444;
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    .consultations{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
 .consultation-sidenav-container {
   position: absolute;

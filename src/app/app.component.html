@@ -1,5 +1,5 @@
-<mat-toolbar color="primary">
-  <span>Doctor Practice</span>
+<mat-toolbar *ngIf="showToolbar" color="primary">
+  <span>Cabinet Médical</span>
   <span class="toolbar-spacer"></span>
   <nav>
     <a mat-button routerLink="/patients" routerLinkActive="active">
@@ -8,15 +8,15 @@
     </a>
     <a mat-button routerLink="/appointments" routerLinkActive="active">
       <mat-icon>event</mat-icon>
-      Appointments
+      Rendez-vous
     </a>
     <a mat-button routerLink="/visits" routerLinkActive="active">
       <mat-icon>medical_services</mat-icon>
-      Visits
+      Visites
     </a>
   </nav>
 </mat-toolbar>
 
 <div class="content-container">
   <router-outlet></router-outlet>
-  </div>
+</div>

@@ -1,32 +1,24 @@
 <div class="appointments-container">
   <div class="header-row">
-    <h2>rendez vous</h2>
-    <!-- <button mat-raised-button color="primary" (click)="openCreateDialog()">
-      <mat-icon>ajouter</mat-icon>
-      Nouveau rendez vous
-    </button> -->
+    <h2>Rendez-vous</h2>
+    <button mat-raised-button color="primary" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon>
+      Nouveau rendez-vous
+    </button>
   </div>
 
   <div class="filters-row">
     <div class="predefined-filters">
-      <button mat-stroked-button 
-              [class.active]="currentFilter === 'all'"
-              (click)="filterAppointments('all')">
+      <button mat-stroked-button [class.active]="currentFilter === 'all'" (click)="filterAppointments('all')">
         tout
       </button>
-      <button mat-stroked-button 
-              [class.active]="currentFilter === 'today'"
-              (click)="filterAppointments('today')">
+      <button mat-stroked-button [class.active]="currentFilter === 'today'" (click)="filterAppointments('today')">
         Aujourd'hui
       </button>
-      <button mat-stroked-button 
-              [class.active]="currentFilter === 'tomorrow'"
-              (click)="filterAppointments('tomorrow')">
+      <button mat-stroked-button [class.active]="currentFilter === 'tomorrow'" (click)="filterAppointments('tomorrow')">
         demain
       </button>
-      <button mat-stroked-button 
-              [class.active]="currentFilter === 'upcoming'"
-              (click)="filterAppointments('upcoming')">
+      <button mat-stroked-button [class.active]="currentFilter === 'upcoming'" (click)="filterAppointments('upcoming')">
         prochains 7 jours
       </button>
     </div>
@@ -41,20 +33,18 @@
   <div class="table-container">
     <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0">
       <ng-container matColumnDef="num_rdv">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Sequence No. </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> N° </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.num_rdv}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="date_rdv">
-        <mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date" [start]="'asc'">
-          Date et heure
-        </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Date et heure </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.date_rdv | date:'dd/MM/yyyy HH:mm'}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="patientName">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Patient </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.patient.prenom_patient}} {{element.patient.nom_patient}}</mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.patient.prenom_patient}} {{element.patient.nom_patient}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="motif">
@@ -78,10 +68,7 @@
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 25]"
-                   [pageSize]="10"
-                   showFirstLastButtons
-                   aria-label="Select page of appointments">
+    <mat-paginator [pageSizeOptions]="[5, 10, 25]" [pageSize]="10" showFirstLastButtons>
     </mat-paginator>
   </div>
-</div> 
+</div>
