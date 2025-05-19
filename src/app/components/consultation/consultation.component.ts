@@ -68,18 +68,41 @@ export class ConsultationComponent implements OnInit {
         taille: parseInt(formValue.taille, 10),
         id_patient: this.patient.id_patient
       };
-      this.consultationService.createConsultation(consultationData).subscribe({
-        next: (createdConsultation) => {
-          // Add the new consultation to the history list
-          this.consultationHistory = [createdConsultation, ...this.consultationHistory];
-          this.consultationForm.reset();
-          this.selectedHistory = null;
-        },
-        error: (error) => {
-          console.error('Error creating consultation:', error);
-          // Optionally display error feedback to the user
-        }
-      });
+      if (this.selectedHistory && this.selectedHistory.id_consultation) {
+        // Update existing consultation
+        this.consultationService.updateConsultation(this.selectedHistory.id_consultation, consultationData).subscribe({
+          next: () => {
+            if (!this.selectedHistory) return;
+            const updatedConsultation = {
+              ...consultationData,
+              id_consultation: this.selectedHistory.id_consultation,
+              created_at: this.selectedHistory.created_at,
+              updated_at: new Date().toISOString()
+            };
+            this.consultationHistory = this.consultationHistory.map(c =>
+              c.id_consultation === updatedConsultation.id_consultation ? updatedConsultation : c
+            );
+            this.consultationHistory = [...this.consultationHistory];
+            this.consultationForm.reset();
+            this.selectedHistory = null;
+          },
+          error: (error) => {
+            console.error('Error updating consultation:', error);
+          }
+        });
+      } else {
+        // Create new consultation
+        this.consultationService.createConsultation(consultationData).subscribe({
+          next: (createdConsultation) => {
+            this.consultationHistory = [createdConsultation, ...this.consultationHistory];
+            this.consultationForm.reset();
+            this.selectedHistory = null;
+          },
+          error: (error) => {
+            console.error('Error creating consultation:', error);
+          }
+        });
+      }
     }
   }
 

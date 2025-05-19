@@ -22,7 +22,7 @@ export class ConsultationService {
   updateConsultation(id: number, Consultation: Consultation): Observable<Consultation> {
     console.log("id", id)
     console.log("Consultation", Consultation)
-    return this.http.put<Consultation>(`http://localhost:8000/api/consulation/edit/${id}`, Consultation);
+    return this.http.put<Consultation>(`http://localhost:8000/api/consultation/edit/${id}`, Consultation);
   }
 
   deleteConsultation(id: number): Observable<void> {
