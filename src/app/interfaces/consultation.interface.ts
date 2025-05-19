@@ -10,5 +10,6 @@ export interface Consultation {
     poids: number,
     taille: number,
     diagnostic_principal: string,
-    traitement: string
+    traitement: string,
+    created_at: Date
 }

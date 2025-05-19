@@ -1,130 +1,130 @@
-<mat-sidenav-container class="consultation-sidenav-container">
-  <!-- <mat-sidenav mode="side" opened class="history-sidenav">
-    <div class="history-header">
-      <h3>Consultation History</h3>
-    </div>
-    <mat-list>
-      <mat-list-item *ngFor="let history of consultationHistory" (click)="viewHistoryDetails(history)">
-        <div class="history-item">
-          <div class="history-date">{{history.date | date:'dd/MM/yyyy'}}</div>
-          <div class="history-diagnosis">{{history.diagnosis}}</div>
-        </div>
-      </mat-list-item>
-    </mat-list>
-  </mat-sidenav> -->
-
-  <mat-sidenav-content>
-    <div class="consultation-container">
-      <div class="patient-info-card">
-        <mat-card>
-          <mat-card-content>
-            <div class="patient-info">
-              <span><strong>Patient:</strong> {{patient.prenom_patient}} {{patient.nom_patient}}</span>
-              <span><strong>Date de naissance:</strong> {{patient.date_naissance | date}}</span>
-              <span><strong>Téléphone:</strong> {{patient.telephone}}</span>
-              <span><strong>Assurance:</strong> {{patient.assurance}}</span>
+<div class="consultation-wrapper">
+  <mat-tab-group>
+    <mat-tab label="Consultation">
+      <div class="tab-content">
+        <mat-sidenav-container class="consultation-sidenav-container">
+          <mat-sidenav mode="side" opened class="history-sidenav">
+            <div class="history-header">
+              <h3>Historique des consultations</h3>
             </div>
-          </mat-card-content>
-        </mat-card>
+            <mat-list>
+              <mat-list-item
+                *ngFor="let history of consultationHistory"
+                (click)="viewHistoryDetails(history)"
+                [class.active]="selectedHistory === history"
+              >
+                <div class="history-item">
+                  <div class="history-date">{{history.created_at | date:'dd/MM/yyyy HH:mm'}}</div>
+                  <div class="history-diagnosis">{{history.diagnostic_principal}}</div>
+                </div>
+              </mat-list-item>
+            </mat-list>
+          </mat-sidenav>
+
+          <mat-sidenav-content>
+            <div class="consultation-container">
+              <div class="patient-info-card">
+                <mat-card>
+                  <mat-card-content>
+                    <div class="patient-info">
+                      <span><strong>Patient:</strong> {{patient.prenom_patient}} {{patient.nom_patient}}</span>
+                      <span><strong>Date de naissance:</strong> {{patient.date_naissance | date}}</span>
+                      <span><strong>Téléphone:</strong> {{patient.telephone}}</span>
+                      <span><strong>Assurance:</strong> {{patient.assurance}}</span>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+
+              <form [formGroup]="consultationForm" (ngSubmit)="onSubmit()" class="consultation-form">
+                <div class="vital-signs-row">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Température (°C)</mat-label>
+                    <input matInput type="number" formControlName="temperature" placeholder="36.5">
+                    <mat-error *ngIf="consultationForm.get('temperature')?.errors?.['min'] || consultationForm.get('temperature')?.errors?.['max']">
+                      Must be between 35°C and 42°C
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Tension artérielle systolique</mat-label>
+                    <input matInput type="number" formControlName="tension_arterielle_systolique" placeholder="120">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Tension artérielle diastolique</mat-label>
+                    <input matInput type="number" formControlName="tension_arterielle_diastolique" placeholder="80">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Saturation en oxygène (%)</mat-label>
+                    <input matInput type="number" formControlName="saturation_oxygene" placeholder="98">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Fréquence cardiaque</mat-label>
+                    <input matInput type="number" formControlName="frequence_cardiaque" placeholder="72">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Poids (kg)</mat-label>
+                    <input matInput type="number" formControlName="poids" placeholder="70">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Taille (cm)</mat-label>
+                    <input matInput type="number" formControlName="taille" placeholder="170">
+                  </mat-form-field>
+                </div>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Motif de consultation</mat-label>
+                  <textarea matInput formControlName="motif" rows="2"></textarea>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Symptômes</mat-label>
+                  <textarea matInput formControlName="symptomes" rows="3"></textarea>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Diagnostic</mat-label>
+                  <textarea matInput formControlName="diagnostic_principal" rows="3"></textarea>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Traitement</mat-label>
+                  <textarea matInput formControlName="traitement" rows="3"></textarea>
+                </mat-form-field>
+
+                <div class="consultations">
+                  <mat-label>Consultation</mat-label>
+                  <div class="file-input-wrapper">
+                    <label class="file-input-label" for="file-upload">Choose file</label>
+                    <input class="file-input" type="file" id="file-upload" onchange="showFilename(event)">
+                    <span class="file-input-filename" id="filename">No file chosen</span>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button mat-button type="button" (click)="router.navigate(['/patients'])">Cancel</button>
+                  <button mat-raised-button color="primary" type="submit" [disabled]="!consultationForm.valid">
+                    Save Consultation
+                  </button>
+                </div>
+              </form>
+            </div>
+          </mat-sidenav-content>
+        </mat-sidenav-container>
       </div>
+    </mat-tab>
 
-      <form [formGroup]="consultationForm" (ngSubmit)="onSubmit()" class="consultation-form">
-        <div class="vital-signs-row">
-          <mat-form-field appearance="outline">
-            <mat-label>Température (°C)</mat-label>
-            <input matInput type="number" formControlName="temperature" placeholder="36.5">
-            <mat-error *ngIf="consultationForm.get('temperature')?.errors?.['min'] || consultationForm.get('temperature')?.errors?.['max']">
-              Must be between 35°C and 42°C
-            </mat-error>
-          </mat-form-field>
+    <mat-tab label="Certificat">
+      <app-certificat></app-certificat>
+    </mat-tab>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Systolic BP (mmHg)</mat-label>
-            <input matInput type="number" formControlName="tension_arterielle_systolique" placeholder="120">
-            <mat-error *ngIf="consultationForm.get('tension_arterielle_systolique')?.errors?.['required']">Required</mat-error>
-            <mat-error *ngIf="consultationForm.get('tension_arterielle_systolique')?.errors?.['min'] || consultationForm.get('tension_arterielle_systolique')?.errors?.['max']">
-              Must be between 70 and 200 mmHg
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Diastolic BP (mmHg)</mat-label>
-            <input matInput type="number" formControlName="tension_arterielle_diastolique" placeholder="80">
-            <mat-error *ngIf="consultationForm.get('tension_arterielle_diastolique')?.errors?.['required']">Required</mat-error>
-            <mat-error *ngIf="consultationForm.get('tension_arterielle_diastolique')?.errors?.['min'] || consultationForm.get('tension_arterielle_diastolique')?.errors?.['max']">
-              Must be between 40 and 130 mmHg
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>SPO2 (%)</mat-label>
-            <input matInput type="number" formControlName="saturation_oxygene" placeholder="98">
-            <mat-error *ngIf="consultationForm.get('saturation_oxygene')?.errors?.['required']">Required</mat-error>
-            <mat-error *ngIf="consultationForm.get('saturation_oxygene')?.errors?.['min'] || consultationForm.get('saturation_oxygene')?.errors?.['max']">
-              Must be between 70% and 100%
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Weight (kg)</mat-label>
-            <input matInput type="number" formControlName="poids" placeholder="70">
-            <mat-error *ngIf="consultationForm.get('poids')?.errors?.['required']">Required</mat-error>
-            <mat-error *ngIf="consultationForm.get('poids')?.errors?.['min'] || consultationForm.get('poids')?.errors?.['max']">
-              Must be between 0 and 500 kg
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Height (cm)</mat-label>
-            <input matInput type="number" formControlName="taille" placeholder="170">
-            <mat-error *ngIf="consultationForm.get('taille')?.errors?.['required']">Required</mat-error>
-            <mat-error *ngIf="consultationForm.get('taille')?.errors?.['min'] || consultationForm.get('taille')?.errors?.['max']">
-              Must be between 0 and 300 cm
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>BPM</mat-label>
-            <input matInput type="number" formControlName="frequence_cardiaque" placeholder="80">
-            <mat-error *ngIf="consultationForm.get('frequence_cardiaque')?.errors?.['required']">Required</mat-error>
-            <mat-error *ngIf="consultationForm.get('frequence_cardiaque')?.errors?.['min'] || consultationForm.get('frequence_cardiaque')?.errors?.['max']">
-              Must be between 40 and 200 BPM
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Symptoms</mat-label>
-          <textarea matInput formControlName="symptomes" rows="3"></textarea>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Diagnosis</mat-label>
-          <textarea matInput formControlName="diagnostic_principal" rows="3"></textarea>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Treatment</mat-label>
-          <textarea matInput formControlName="traitement" rows="3"></textarea>
-        </mat-form-field>
-        <div class="consultations">
-            <mat-label>Consultation</mat-label>
-           <div class="file-input-wrapper">
-      <label class="file-input-label" for="file-upload">Choose file</label>
-      <input class="file-input" type="file" id="file-upload" onchange="showFilename(event)">
-      <span class="file-input-filename" id="filename">No file chosen</span>
-    </div>
-        </div>
-        
-        
-
-        <div class="form-actions">
-          <button mat-button type="button" (click)="router.navigate(['/patients'])">Cancel</button>
-          <button mat-raised-button color="primary" type="submit" [disabled]="!consultationForm.valid">
-            Save Consultation
-          </button>
-        </div>
-      </form>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container> 
+    <mat-tab label="Compte rendu">
+      <app-compte-rendu></app-compte-rendu>
+    </mat-tab>
+  </mat-tab-group>
+</div> 

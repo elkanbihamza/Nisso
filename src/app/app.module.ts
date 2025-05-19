@@ -24,6 +24,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -37,8 +38,10 @@ import { PatientsComponent } from './components/patients/patients.component';
 import { CreatePatientComponent } from './components/patients/create-patient/create-patient.component';
 import { ConsultationComponent } from './components/consultation/consultation.component';
 import { ConsultationHistoryDialogComponent } from './components/patients/consultation-history-dialog/consultation-history-dialog.component';
+import { CertificatComponent } from './components/certificat/certificat.component';
+import { CompteRenduComponent } from './components/compte-rendu/compte-rendu.component';
 
-// N’oublie pas d’ajouter ici ton LoginComponent (ou d’autres composants liés à l’auth)
+// N'oublie pas d'ajouter ici ton LoginComponent (ou d'autres composants liés à l'auth)
 import { LoginComponent } from './auth/login/login.component';
 
 @NgModule({
@@ -50,6 +53,8 @@ import { LoginComponent } from './auth/login/login.component';
     CreatePatientComponent,
     ConsultationComponent,
     ConsultationHistoryDialogComponent,
+    CertificatComponent,
+    CompteRenduComponent,
     LoginComponent // <= ici aussi
   ],
   imports: [
@@ -75,7 +80,8 @@ import { LoginComponent } from './auth/login/login.component';
     MatSortModule,
     MatToolbarModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

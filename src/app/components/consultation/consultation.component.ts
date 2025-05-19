@@ -48,7 +48,10 @@ export class ConsultationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Add any initialization logic here if needed
+    // Load consultation history from patient object
+    if (this.patient && this.patient.consultations) {
+      this.consultationHistory = this.patient.consultations;
+    }
   }
 
   onSubmit(): void {
@@ -76,6 +79,20 @@ export class ConsultationComponent implements OnInit {
 
   viewHistoryDetails(history: Consultation): void {
     this.selectedHistory = history;
+    // Patch the form with the selected consultation's data
+    this.consultationForm.patchValue({
+      motif: history.motif,
+      temperature: history.temperature,
+      symptomes: history.symptomes,
+      tension_arterielle_systolique: history.tension_arterielle_systolique,
+      tension_arterielle_diastolique: history.tension_arterielle_diastolique,
+      saturation_oxygene: history.saturation_oxygene,
+      frequence_cardiaque: history.frequence_cardiaque,
+      poids: history.poids,
+      taille: history.taille,
+      diagnostic_principal: history.diagnostic_principal,
+      traitement: history.traitement
+    });
     // Optionally, you could show this in a dialog or populate a details section
     console.log('Viewing history:', history);
   }

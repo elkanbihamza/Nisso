@@ -1,7 +1,22 @@
+.consultation-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.tab-content {
+  height: 100%;
+  overflow: hidden;
+}
+
+.consultation-sidenav-container {
+  height: 100%;
+}
+
 .consultation-container {
   padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .patient-info-card {
@@ -42,57 +57,55 @@
 mat-form-field {
   width: 100%;
 }
-   .file-input-wrapper {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5em;
-      font-family: 'Segoe UI', Arial, sans-serif;
-    }
-    .file-input-label {
-      background: #6c63ff;
-      color: #fff;
-      padding: 6px 16px;
-      border-radius: 6px;
-      font-size: 0.93em;
-      cursor: pointer;
-      transition: background 0.2s;
-      box-shadow: 0 2px 8px rgba(108, 99, 255, 0.12);
-      border: none;
-      outline: none;
-      margin-right: 4px;
-    }
-    .file-input-label:hover {
-      background: #5753c9;
-    }
-    .file-input {
-      display: none;
-    }
-    .file-input-filename {
-      font-size: 0.93em;
-      color: #444;
-      max-width: 120px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      vertical-align: middle;
-      display: inline-block;
-    }
-    .consultations{
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
 
-.consultation-sidenav-container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.file-input-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.file-input-label {
+  background: #6c63ff;
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 0.93em;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(108, 99, 255, 0.12);
+  border: none;
+  outline: none;
+  margin-right: 4px;
+}
+
+.file-input-label:hover {
+  background: #5753c9;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-input-filename {
+  font-size: 0.93em;
+  color: #444;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.consultations {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .history-sidenav {
-  width: 300px;
+  width: 20%;
   background-color: #f5f5f5;
   border-right: 1px solid #e0e0e0;
 }
@@ -111,6 +124,7 @@ mat-form-field {
 .history-item {
   padding: 8px 0;
   width: 100%;
+  cursor: pointer;
 
   .history-date {
     font-weight: 500;
@@ -125,6 +139,16 @@ mat-form-field {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  &:hover {
+    background: #e3f2fd;
+  }
+}
+
+// Highlight the selected item
+.mat-list-item.active .history-item,
+.history-item.selected {
+  background: #bbdefb;
 }
 
 // Make the form content scrollable if needed
@@ -135,4 +159,18 @@ mat-sidenav-content {
 // Style for active/selected history item
 .mat-list-item.active {
   background-color: #e3f2fd;
+}
+
+// Tab styles
+::ng-deep .mat-tab-body-wrapper {
+  height: 100%;
+}
+
+::ng-deep .mat-tab-body {
+  height: 100%;
+}
+
+::ng-deep .mat-tab-body-content {
+  height: 100%;
+  overflow: hidden;
 } 
