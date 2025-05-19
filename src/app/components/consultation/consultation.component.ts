@@ -3,8 +3,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Consultation } from '../../interfaces/consultation.interface';
 import { ConsultationService } from '../../services/consultation.service';
-
-
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-consultation',
@@ -20,7 +19,8 @@ export class ConsultationComponent implements OnInit {
   constructor(
     public router: Router,
     private fb: FormBuilder,
-    private consultationService: ConsultationService
+    private consultationService: ConsultationService,
+    private dialog: MatDialog
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.patient = navigation?.extras.state?.['patient'];
@@ -106,7 +106,6 @@ export class ConsultationComponent implements OnInit {
     }
   }
 
-
   viewHistoryDetails(history: Consultation): void {
     this.selectedHistory = history;
     // Patch the form with the selected consultation's data
@@ -131,4 +130,50 @@ export class ConsultationComponent implements OnInit {
     this.selectedHistory = null;
     this.consultationForm.reset();
   }
-} 
+
+  confirmDeleteConsultation(consultation: Consultation): void {
+    console.log("history consultation", consultation)
+    const dialogRef = this.dialog.open(ConfirmDeleteDialog);
+    dialogRef.afterClosed().subscribe(result => {
+      console.log("result", result)
+      if (result) {
+        this.deleteConsultation(consultation);
+      }
+    });
+  }
+
+  deleteConsultation(consultation: Consultation): void {
+    console.log("consultation", consultation)
+    if (!consultation.id_consultation) return;
+    console.log('Deleting consultation with id:', consultation.id_consultation);
+    this.consultationService.deleteConsultation(consultation.id_consultation).subscribe({
+      next: () => {
+        console.log('Deleted successfully');
+        this.consultationHistory = this.consultationHistory.filter(c => c.id_consultation !== consultation.id_consultation);
+        if (this.selectedHistory && this.selectedHistory.id_consultation === consultation.id_consultation) {
+          this.selectedHistory = null;
+          this.consultationForm.reset();
+        }
+      },
+      error: (error) => {
+        console.error('Error deleting consultation:', error);
+      }
+    });
+  }
+}
+
+// Confirmation dialog component
+import { Component as DialogComponent } from '@angular/core';
+
+@DialogComponent({
+  selector: 'confirm-delete-dialog',
+  template: `
+    <h2 mat-dialog-title>Confirmer la suppression</h2>
+    <mat-dialog-content>Voulez-vous vraiment supprimer cette consultation ?</mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close="false">Annuler</button>
+      <button mat-raised-button color="warn" mat-dialog-close="true">Supprimer</button>
+    </mat-dialog-actions>
+  `
+})
+export class ConfirmDeleteDialog {} 

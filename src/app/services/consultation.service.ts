@@ -26,6 +26,6 @@ export class ConsultationService {
   }
 
   deleteConsultation(id: number): Observable<void> {
-    return this.http.delete<void>(`http://localhost:8000/api/rendezvous/${id}`);
+    return this.http.delete<void>(`http://localhost:8000/api/consultation/${id}`);
   }
 } 

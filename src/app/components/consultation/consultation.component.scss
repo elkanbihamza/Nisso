@@ -121,10 +121,18 @@ mat-form-field {
   }
 }
 
-.history-item {
-  padding: 8px 0;
+.history-row {
+  display: flex;
+  align-items: center;
   width: 100%;
-  cursor: pointer;
+  justify-content: space-between;
+}
+
+.history-item {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 
   .history-date {
     font-weight: 500;
@@ -173,4 +181,13 @@ mat-sidenav-content {
 ::ng-deep .mat-tab-body-content {
   height: 100%;
   overflow: hidden;
+}
+
+mat-list-item {
+  display: flex;
+}
+
+button[mat-icon-button] {
+  margin-left: 8px;
+  flex-shrink: 0;
 } 

@@ -36,7 +36,7 @@ import { AppointmentsComponent } from './components/appointments/appointments.co
 import { CreateAppointmentDialogComponent } from './components/appointments/create-appointment-dialog/create-appointment-dialog.component';
 import { PatientsComponent } from './components/patients/patients.component';
 import { CreatePatientComponent } from './components/patients/create-patient/create-patient.component';
-import { ConsultationComponent } from './components/consultation/consultation.component';
+import { ConsultationComponent, ConfirmDeleteDialog } from './components/consultation/consultation.component';
 import { ConsultationHistoryDialogComponent } from './components/patients/consultation-history-dialog/consultation-history-dialog.component';
 import { CertificatComponent } from './components/certificat/certificat.component';
 import { CompteRenduComponent } from './components/compte-rendu/compte-rendu.component';
@@ -55,7 +55,8 @@ import { LoginComponent } from './auth/login/login.component';
     ConsultationHistoryDialogComponent,
     CertificatComponent,
     CompteRenduComponent,
-    LoginComponent // <= ici aussi
+    LoginComponent,
+    ConfirmDeleteDialog
   ],
   imports: [
     BrowserModule,
