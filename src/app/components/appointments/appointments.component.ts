@@ -101,65 +101,84 @@ export class AppointmentsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Handle new appointment creation
-        console.log('New appointment:', result);
+        // Refresh the appointments list
+        this.appointmentService.getAppointments().subscribe((appointments: Appointment[]) => {
+          this.originalData = appointments;
+          this.dataSource.data = appointments;
+        });
       }
     });
   }
 
-editAppointment(appointment: Appointment): void {
-  const dialogRef = this.dialog.open(CreateAppointmentDialogComponent, {
-    width: '500px',
-    data: { ...appointment, isEdit: true }
-  });
+  editAppointment(appointment: Appointment): void {
+    const dialogRef = this.dialog.open(CreateAppointmentDialogComponent, {
+      width: '500px',
+      data: {
+        ...appointment,
+        isEdit: true
+      }
+    });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      console.log("result", result)
-      this.appointmentService.updateAppointment(appointment.num_rdv, result).subscribe({
-        next: (updatedAppointment: Appointment) => {
-          const index = this.dataSource.data.findIndex(a => a.num_rdv === appointment.num_rdv);
-          if (index !== -1) {
-            const updatedData = [...this.dataSource.data];
-            updatedData[index] = updatedAppointment;
-            this.dataSource.data = updatedData;
-          }
-        },
-        error: err => {
-          console.error('Update failed:', err);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Format the date and time before sending to the backend
+        const dateObj = new Date(result.date_rdv);
+        const timeString = result.time_rdv;
+        
+        // Ensure we have a valid time string
+        if (timeString && typeof timeString === 'string') {
+          const [hours, minutes] = timeString.split(':');
+          dateObj.setHours(parseInt(hours), parseInt(minutes));
         }
-      });
-    }
-  });
-}
 
+        const formattedAppointment = {
+          ...result,
+          date_rdv: dateObj.toISOString()
+        };
 
+        this.appointmentService.updateAppointment(appointment.num_rdv, formattedAppointment).subscribe({
+          next: (updatedAppointment: Appointment) => {
+            // Update the data in the table
+            const index = this.dataSource.data.findIndex(a => a.num_rdv === appointment.num_rdv);
+            if (index !== -1) {
+              const updatedData = [...this.dataSource.data];
+              updatedData[index] = updatedAppointment;
+              this.dataSource.data = updatedData;
+              this.originalData = updatedData;
+            }
+          },
+          error: err => {
+            console.error('Update failed:', err);
+          }
+        });
+      }
+    });
+  }
 
   deleteAppointment(appointment: Appointment): void {
-  const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-    width: '400px',
-    data: {
-      title: 'supprimer ce rendez-vous',
-      message: `Are you sure you want to delete the appointment for ${appointment.patient.prenom_patient} on ${appointment.date_rdv}?`
-    }
-  });
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'supprimer ce rendez-vous',
+        message: `Are you sure you want to delete the appointment for ${appointment.patient.prenom_patient} on ${appointment.date_rdv}?`
+      }
+    });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      this.appointmentService.deleteAppointment(appointment.num_rdv).subscribe({
-        next: () => {
-          // Remove from dataSource after successful delete
-          const updatedData = this.dataSource.data.filter(a => a.num_rdv !== appointment.num_rdv);
-          this.dataSource.data = updatedData;
-        },
-        error: err => {
-          console.error('Delete failed:', err);
-        }
-      });
-    }
-  });
-}
-
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.appointmentService.deleteAppointment(appointment.num_rdv).subscribe({
+          next: () => {
+            // Remove from dataSource after successful delete
+            const updatedData = this.dataSource.data.filter(a => a.num_rdv !== appointment.num_rdv);
+            this.dataSource.data = updatedData;
+          },
+          error: err => {
+            console.error('Delete failed:', err);
+          }
+        });
+      }
+    });
+  }
 
   filterAppointments(filter: 'all' | 'today' | 'tomorrow' | 'upcoming'): void {
     this.currentFilter = filter;

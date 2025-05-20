@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Appointment } from '../interfaces/appointment.interface';
+import { Appointment, AppointmentCreateUpdate } from '../interfaces/appointment.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -11,17 +11,15 @@ export class AppointmentService {
 
   constructor(private http: HttpClient) {}
 
-  getAppointments(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:8000/api/rendezvous');
+  getAppointments(): Observable<Appointment[]> {
+    return this.http.get<Appointment[]>('http://localhost:8000/api/rendezvous');
   }
 
-  createAppointment(appointment: Omit<Appointment, 'id' | 'num_rdv'>): Observable<Appointment> {
-    return this.http.post<Appointment>(this.apiUrl, appointment);
+  createAppointment(appointment: AppointmentCreateUpdate): Observable<Appointment> {
+    return this.http.post<Appointment>('http://localhost:8000/api/rendezvous/create', appointment);
   }
 
-  updateAppointment(id: number, appointment: Appointment): Observable<Appointment> {
-    console.log("id", id)
-    console.log("appointment", appointment)
+  updateAppointment(id: number, appointment: AppointmentCreateUpdate): Observable<Appointment> {
     return this.http.put<Appointment>(`http://localhost:8000/api/rendezvous/edit/${id}`, appointment);
   }
 

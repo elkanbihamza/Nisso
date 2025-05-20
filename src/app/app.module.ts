@@ -38,11 +38,13 @@ import { PatientsComponent } from './components/patients/patients.component';
 import { CreatePatientComponent } from './components/patients/create-patient/create-patient.component';
 import { ConsultationComponent, ConfirmDeleteDialog } from './components/consultation/consultation.component';
 import { ConsultationHistoryDialogComponent } from './components/patients/consultation-history-dialog/consultation-history-dialog.component';
-import { CertificatComponent } from './components/certificat/certificat.component';
-import { CompteRenduComponent } from './components/compte-rendu/compte-rendu.component';
+import { CertificatComponent, ConfirmDeleteDialogCertificat } from './components/certificat/certificat.component';
+import { OrdonnanceComponent, ConfirmDeleteDialogOrdonnance } from './components/ordonnance/ordonnance.component';
 
 // N'oublie pas d'ajouter ici ton LoginComponent (ou d'autres composants liés à l'auth)
 import { LoginComponent } from './auth/login/login.component';
+
+import { QuillModule } from 'ngx-quill';
 
 @NgModule({
   declarations: [
@@ -54,9 +56,11 @@ import { LoginComponent } from './auth/login/login.component';
     ConsultationComponent,
     ConsultationHistoryDialogComponent,
     CertificatComponent,
-    CompteRenduComponent,
+    OrdonnanceComponent,
     LoginComponent,
-    ConfirmDeleteDialog
+    ConfirmDeleteDialog,
+    ConfirmDeleteDialogCertificat,
+    ConfirmDeleteDialogOrdonnance
   ],
   imports: [
     BrowserModule,
@@ -82,7 +86,8 @@ import { LoginComponent } from './auth/login/login.component';
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
-    MatTabsModule
+    MatTabsModule,
+    QuillModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

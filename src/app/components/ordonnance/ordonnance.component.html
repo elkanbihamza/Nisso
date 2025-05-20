@@ -1,17 +1,17 @@
-<div class="certificat-wrapper">
+<div class="ordonnance-wrapper">
   <div class="tab-content">
-    <div class="certificat-flex-row">
+    <div class="ordonnance-flex-row">
       <div class="history-sidenav">
         <div class="history-header">
-          <h3>Historique des certificats</h3>
-          <button mat-button color="primary" (click)="clearCertificatForm()" style="margin-top: 8px; width: 100%;">
-            Nouveau certificat
+          <h3>Historique des ordonnances</h3>
+          <button mat-button color="primary" (click)="clearOrdonnanceForm()" style="margin-top: 8px; width: 100%;">
+            Nouvelle ordonnance
           </button>
         </div>
         <mat-list>
           <div
             mat-list-item
-            *ngFor="let history of certificatHistory"
+            *ngFor="let history of ordonnanceHistory"
             (click)="viewHistoryDetails(history)"
             [class.active]="selectedHistory === history"
             class="history-list-item"
@@ -20,22 +20,22 @@
               <div class="history-item">
                 <div class="history-date">{{history.created_at | date:'dd/MM/yyyy HH:mm'}}</div>
               </div>
-              <button mat-icon-button color="warn" (click)="confirmDeleteCertificat(history); $event.stopPropagation();" matTooltip="Supprimer">
+              <button mat-icon-button color="warn" (click)="confirmDeleteOrdonnance(history); $event.stopPropagation();" matTooltip="Supprimer">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
           </div>
         </mat-list>
       </div>
-      <div class="certificat-container">
+      <div class="ordonnance-container">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Contenu du certificat</mat-label>
-          <textarea matInput rows="12" placeholder="Rédigez le certificat ici..." [(ngModel)]="contenu" name="contenu"></textarea>
+          <mat-label>Description de l'ordonnance</mat-label>
+          <textarea matInput rows="12" placeholder="Rédigez l'ordonnance ici..." [(ngModel)]="description" name="description"></textarea>
         </mat-form-field>
         <div class="form-actions">
-          <button mat-raised-button color="primary" (click)="saveCertificat()" [disabled]="!contenu">Enregistrer</button>
+          <button mat-raised-button color="primary" (click)="saveOrdonnance()" [disabled]="!description">Enregistrer</button>
         </div>
       </div>
     </div>
   </div>
-</div>
+</div> 

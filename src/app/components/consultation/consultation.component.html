@@ -120,11 +120,11 @@
     </mat-tab>
 
     <mat-tab label="Certificat">
-      <app-certificat></app-certificat>
+      <app-certificat [patient]="patient"></app-certificat>
     </mat-tab>
 
-    <mat-tab label="Compte rendu">
-      <app-compte-rendu></app-compte-rendu>
+    <mat-tab label="Ordonnance">
+      <app-ordonnance [patient]="patient"></app-ordonnance>
     </mat-tab>
   </mat-tab-group>
 </div> 
